@@ -14,9 +14,10 @@ const socketio = require('feathers-socketio');
 const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
-
+var morgan = require('morgan');
 const app = feathers();
 
+app.use(morgan('combined'));
 // Load app configuration
 app.configure(configuration(path.join(__dirname, '..')));
 // Enable CORS, security, compression, favicon and body parsing

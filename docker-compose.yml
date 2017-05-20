@@ -6,7 +6,8 @@ services:
     ports:
       - "80:80"
     links:
-      - node-apart:node
+      - node-apart1:node-apart1
+      - node-apart2:node-apart2
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     container_name: docker-outer-web
@@ -16,11 +17,22 @@ services:
       interval: 10m
       timeout: 10s
       retries: 3
-  node-apart:
+  node-apart1:
     build: ./node-part
     ports:
       - "3030"
-    container_name: docker-base-node-apart
+    container_name: docker-base-node-apart1
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3030"]
+      interval: 10m
+      timeout: 10s
+      retries: 3
+  node-apart2:
+    build: ./node-part
+    ports:
+      - "3030"
+    container_name: docker-base-node-apart2
     restart: on-failure
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3030"]
