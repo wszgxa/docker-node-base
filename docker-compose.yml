@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  nginx-web:
+    build: .
+    ports:
+      - "80:80"
+    links:
+      - node-apart:node
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    container_name: docker-outer-web
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 10m
+      timeout: 10s
+      retries: 3
+  node-apart:
+    build: ./node-part
+    ports:
+      - "3030"
+    container_name: docker-base-node-apart
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3030"]
+      interval: 10m
+      timeout: 10s
+      retries: 3
