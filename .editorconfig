@@ -13,7 +13,7 @@ trim_trailing_whitespace = true
 [COMMIT_EDITMSG]
 max_line_length = 0
 
-[*.config]
+[*.conf]
 
 indent_size = 4
 indent_style = space

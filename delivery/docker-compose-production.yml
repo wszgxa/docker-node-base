@@ -1,0 +1,55 @@
+version: '3'
+# for publish
+
+services:
+  nginx-web:
+    build: .
+    ports:
+      - "80:80"
+    links:
+      - node-part1:node-part1
+      - node-part2:node-part2
+      - react-part:react-part
+    container_name: docker-out-web
+    restart: on-failure
+    healthcheck: &healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 10m
+      timeout: 10s
+      retries: 3
+  node-part1:
+    build: ../node-part
+    ports:
+      - "8080"
+    container_name: node-part1
+    environment:
+      NODE_ENV: production
+      NODE_PORT: 8080
+    restart: on-failure
+    healthcheck:
+      <<: *healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+  node-part2:
+    build: ../node-part
+    ports:
+      - "8080"
+    container_name: node-part2
+    environment:
+      NODE_ENV: production
+      NODE_PORT: 8080
+    restart: on-failure
+    healthcheck:
+      <<: *healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+  react-part:
+    build: ../react-part
+    ports:
+      - "8080"
+    container_name: react-part
+    environment:
+      NODE_ENV: production
+      NODE_PORT: 8080
+    restart: on-failure
+    healthcheck:
+      <<: *healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]

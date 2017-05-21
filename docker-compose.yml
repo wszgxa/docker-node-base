@@ -11,12 +11,6 @@ services:
     volumes:
       - ./nginx-dev.conf:/etc/nginx/nginx.conf
     container_name: docker-outer-web
-    # restart: on-failure
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost"]
-    #   interval: 10m
-    #   timeout: 10s
-    #   retries: 3
   node-part:
     build: ./node-part
     ports:
