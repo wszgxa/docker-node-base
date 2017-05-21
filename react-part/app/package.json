@@ -1,4 +1,7 @@
 {
+  "name": "ssr part",
+  "description": "docker practice page part",
+  "version": "0.0.0",
   "scripts": {
     "dev": "node server.js",
     "build": "next build",

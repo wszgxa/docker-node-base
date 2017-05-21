@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "description": "node part",
+  "name": "node api",
+  "description": "docker practice node part",
   "version": "0.0.0",
   "homepage": "",
   "main": "src",
