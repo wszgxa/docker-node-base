@@ -1,6 +1,6 @@
+/*global process */
 const express = require('express')
 const next = require('next')
-
 const dev = process.env.NODE_ENV !== 'production'
 const port = process.env.NODE_PORT || 3030
 const app = next({ dev })
