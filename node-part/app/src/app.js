@@ -15,6 +15,7 @@ const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
 var morgan = require('morgan');
+const mongodb = require('./mongodb');
 const app = feathers();
 app.use(morgan('combined'));
 // Load app configuration
@@ -31,6 +32,7 @@ app.use('/', feathers.static(app.get('public')));
 
 // Set up Plugins and providers
 app.configure(hooks());
+app.configure(mongodb);
 app.configure(rest());
 app.configure(socketio());
 
