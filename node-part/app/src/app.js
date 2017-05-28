@@ -1,45 +1,32 @@
-const path = require('path');
-const favicon = require('serve-favicon');
-const compress = require('compression');
-const cors = require('cors');
-const helmet = require('helmet');
-const bodyParser = require('body-parser');
+import Koa from 'koa'
+import logger from 'koa-logger'
+import json from 'koa-json'
+import bodyParser from 'koa-bodyparser'
+// router
+import build from './router/index'
+import {NODE_PORT, NODE_ENV} from '../config/config.js'
 
-const feathers = require('feathers');
-const configuration = require('feathers-configuration');
-const hooks = require('feathers-hooks');
-const rest = require('feathers-rest');
-const socketio = require('feathers-socketio');
+import { resMsg } from './helper.js'
+const app = new Koa()
+// 错误处理
+app.use(async (ctx, next) => {
+  try {
+    await next()
+  } catch (err) {
+    console.log(err)
+  }
+})
+// 接口错误处理
+app.use(async (ctx, next) => {
+  await next()
+  if(ctx.err != undefined ) {
+    ctx.body = resMsg(false, ctx.err)
+  }
+})
+app.use(bodyParser())
+app.use(logger())
+app.use(json())
+build(app)
 
-const middleware = require('./middleware');
-const services = require('./services');
-const appHooks = require('./app.hooks');
-var morgan = require('morgan');
-const mongodb = require('./mongodb');
-const app = feathers();
-app.use(morgan('combined'));
-// Load app configuration
-app.configure(configuration(path.join(__dirname, '..')));
-// Enable CORS, security, compression, favicon and body parsing
-app.use(cors());
-app.use(helmet());
-app.use(compress());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
-// Host the public folder
-app.use('/', feathers.static(app.get('public')));
-
-// Set up Plugins and providers
-app.configure(hooks());
-app.configure(mongodb);
-app.configure(rest());
-app.configure(socketio());
-
-// Set up our services (see `services/index.js`)
-app.configure(services);
-// Configure middleware (see `middleware/index.js`) - always has to be last
-app.configure(middleware);
-app.hooks(appHooks);
-
-module.exports = app;
+app.listen(NODE_PORT || 3000)
+console.log(`Server up and running in ${NODE_ENV}! On port ${NODE_PORT || 3000}!`)
