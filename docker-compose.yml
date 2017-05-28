@@ -13,12 +13,15 @@ services:
     container_name: docker-outer-web-dev
   node-part-dev:
     build: ./node-part
+    links:
+      - mongodb:mongodb
     ports:
-      - "8080"
+      - ${NODE_PORT}
     container_name: docker-base-node-part-dev
     environment:
       NODE_ENV: ${NODE_ENV}
       NODE_PORT: ${NODE_PORT}
+      MONGODB_URL: ${MONGODB_URL}
     volumes:
       - ./node-part/app:/app
   react-part-dev:
@@ -31,3 +34,12 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV}
       NODE_PORT: ${NODE_PORT}
+  mongodb:
+    image: tutum/mongodb:3.2
+    container_name: docker-base-mongodb-part
+    volumes:
+      - ./data/:/data/db/
+    environment:
+      MONGODB_USER: ${MONGODB_USER}
+      MONGODB_DATABASE: ${MONGODB_DATABASE}
+      MONGODB_PASS: ${MONGODB_PASS}
